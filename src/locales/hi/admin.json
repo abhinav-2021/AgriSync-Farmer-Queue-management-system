@@ -1,0 +1,20 @@
+{
+  "commandCenter": "मंडी खरीद केंद्र",
+  "callNextToken": "अगला टोकन बुलाएं",
+  "searchPlaceholder": "टोकन, किसान का नाम, फोन या वाहन नंबर खोजें...",
+  "filterAll": "सभी चरण",
+  "walkInFarmer": "+ प्रत्यक्ष किसान पंजीकरण",
+  "soundAlerts": "ध्वनि सूचना",
+  "liveSync": "रीयल-टाइम सिंक सक्रिय",
+  "viewMode": "दृश्य मोड",
+  "phonePreview": "मोबाइल फ्रेम",
+  "fullScreen": "पूरा दृश्य",
+  "stats": {
+    "totalBooked": "आज की कुल बुकिंग",
+    "waitingYard": "यार्ड में प्रतीक्षारत",
+    "inVerification": "गुणवत्ता जांच में",
+    "atWeighbridge": "धर्मकांटे पर",
+    "paidCompleted": "भुगतान संपन्न",
+    "totalProcured": "कुल खरीद"
+  }
+}

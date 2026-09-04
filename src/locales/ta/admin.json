@@ -1,0 +1,20 @@
+{
+  "commandCenter": "மண்டி கொள்முதல் மையம்",
+  "callNextToken": "அடுத்த டோக்கனை அழைக்கவும்",
+  "searchPlaceholder": "டோக்கன், விவசாயி பெயர், எண் அல்லது வாகனம் மூலம் தேடவும்...",
+  "filterAll": "அனைத்து நிலைகள்",
+  "walkInFarmer": "+ புதிய விவசாயி பதிவு",
+  "soundAlerts": "ஒலி எச்சரிக்கை",
+  "liveSync": "நேரடி ஒத்திசைவு செயலில் உள்ளது",
+  "viewMode": "காட்சி முறை",
+  "phonePreview": "மொபைல் திரை",
+  "fullScreen": "முழு திரை காட்சி",
+  "stats": {
+    "totalBooked": "இன்றைய பதிவுகள்",
+    "waitingYard": "யார்டில் காத்திருப்போர்",
+    "inVerification": "தரப் பரிசோதனையில்",
+    "atWeighbridge": "எடை மேடையில்",
+    "paidCompleted": "பணம் செலுத்தப்பட்டது",
+    "totalProcured": "மொத்த கொள்முதல்"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "commandCenter": "Mandi Procurement Center",
+  "callNextToken": "Call Next Token",
+  "searchPlaceholder": "Search by Token, Farmer Name, Mobile, or Vehicle...",
+  "filterAll": "All Stages",
+  "walkInFarmer": "+ Register Walk-in Farmer",
+  "soundAlerts": "Sound Alerts",
+  "liveSync": "Real-time Sync Active",
+  "viewMode": "View Mode",
+  "phonePreview": "Mobile Frame",
+  "fullScreen": "Responsive View",
+  "stats": {
+    "totalBooked": "Today Bookings",
+    "waitingYard": "Waiting in Yard",
+    "inVerification": "In Quality Check",
+    "atWeighbridge": "At Weighbridge",
+    "paidCompleted": "Paid & Dispatched",
+    "totalProcured": "Total Procured"
+  }
+}

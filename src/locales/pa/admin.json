@@ -1,0 +1,20 @@
+{
+  "commandCenter": "ਮੰਡੀ ਖਰੀਦ ਕੇਂਦਰ",
+  "callNextToken": "ਅਗਲਾ ਟੋਕਨ ਸੱਦੋ",
+  "searchPlaceholder": "ਟੋਕਨ, ਨਾਮ, ਫੋਨ ਜਾਂ ਗੱਡੀ ਨੰਬਰ ਲੱਭੋ...",
+  "filterAll": "ਸਾਰੇ ਪੜਾਅ",
+  "walkInFarmer": "+ ਨਵਾਂ ਕਿਸਾਨ ਦਰਜ ਕਰੋ",
+  "soundAlerts": "ਅਵਾਜ਼ ਸੂਚਨਾ",
+  "liveSync": "ਲਾਈਵ ਸਿੰਕ ਚਾਲੂ",
+  "viewMode": "ਵਿਊ ਮੋਡ",
+  "phonePreview": "ਮੋਬਾਈਲ ਫਰੇਮ",
+  "fullScreen": "ਪੂਰਾ ਵਿਊ",
+  "stats": {
+    "totalBooked": "ਅੱਜ ਦੀਆਂ ਬੁਕਿੰਗਾਂ",
+    "waitingYard": "ਯਾਰਡ ਵਿੱਚ ਉਡੀਕ",
+    "inVerification": "ਗੁਣਵੱਤਾ ਜਾਂਚ ਅਧੀਨ",
+    "atWeighbridge": "ਕੰਡੇ ਤੇ",
+    "paidCompleted": "ਭੁਗਤਾਨ ਮੁਕੰਮਲ",
+    "totalProcured": "ਕੁੱਲ ਖਰੀਦ"
+  }
+}

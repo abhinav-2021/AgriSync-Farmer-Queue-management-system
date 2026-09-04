@@ -1,0 +1,124 @@
+{
+  "howItWorks": "How It Works",
+  "portalAccess": "Portal Access",
+  "liveImpact": "Live Impact",
+  "accessPortals": "Access Portals",
+  "hero": {
+    "badge": "Smart APMC Digital Queue System • Haryana & Punjab Mandi Division",
+    "headlinePart1": "End the Wait.",
+    "headlinePart2": "Streamline Procurement.",
+    "subheadline": "India's unified digital queue system for smart Mandis. Connecting farmers, operators, and state admins in real-time.",
+    "accessPortalBtn": "Access Your Portal",
+    "seeHowItWorksBtn": "See How It Works",
+    "trustNoQueues": "Zero Physical Queues",
+    "trustDirectDbt": "100% Direct DBT Bank Payout",
+    "trustRealtimeSync": "Real-time Token Sync",
+    "liveStreamBadge": "Live Yard Stream",
+    "activeLiveToken": "Active Live Token",
+    "nowCalling": "Now Calling",
+    "lifecycleTitle": "Procurement Progression Lifecycle",
+    "stagePrefix": "Stage",
+    "stageOf": "of",
+    "stage1": "1. Registered",
+    "stage2": "2. Quality Lab",
+    "stage3": "3. Weighbridge",
+    "stage4": "4. Direct DBT",
+    "turnaroundSpeed": "Turnaround speed:",
+    "turnaroundSpeedVal": "< 20 mins total",
+    "websocketSync": "Auto-synced via WebSockets",
+    "stats": {
+      "activeMandis": "Active APMC Mandis",
+      "farmersRegistered": "Farmers Registered",
+      "totalProcured": "Total Procured",
+      "instantDbtDisbursed": "Instant DBT Disbursed"
+    }
+  },
+  "workflow": {
+    "badge": "Seamless Workflow",
+    "title": "How AgriSync Works",
+    "subtitle": "A frictionless 4-step digital journey from farm booking to bank credit.",
+    "stepBadge": "Step",
+    "automatedBadge": "100% Automated",
+    "steps": {
+      "step1": {
+        "title": "Register",
+        "headline": "Book a slot from home.",
+        "desc": "Select your preferred Mandi, specify crop type and estimated tonnage, and reserve a guaranteed arrival time window."
+      },
+      "step2": {
+        "title": "Get Token",
+        "headline": "Receive a live digital queue number.",
+        "desc": "Get an instant SMS and electronic QR gate pass with real-time queue position tracking and dynamic wait-time updates."
+      },
+      "step3": {
+        "title": "Arrive",
+        "headline": "Enter the Mandi precisely when called.",
+        "desc": "Arrive at the exact summoned gate or weighbridge, eliminating days of chaotic tractor-trolley highway bottlenecks."
+      },
+      "step4": {
+        "title": "Get Paid",
+        "headline": "Transparent weighing and instant DBT.",
+        "desc": "Certified moisture lab analysis and digital weighbridges trigger immediate Direct Bank Transfer to your bank account."
+      }
+    }
+  },
+  "portals": {
+    "universalBadge": "Universal Procurement Access",
+    "liveAuthBadge": "Live Supabase Authentication",
+    "title": "Role-Based Portal Access",
+    "subtitle": "Sign in securely using Mobile OTP or Email OTP to access your designated workspace.",
+    "farmerCard": {
+      "title": "For Farmers",
+      "desc": "Verify via Mobile OTP (SMS) or Email OTP to book delivery slots, track live tokens, and download QR gate passes.",
+      "active": "Active Form Below",
+      "select": "Select Farmer Access"
+    },
+    "operatorCard": {
+      "title": "For Mandi Operators",
+      "desc": "Call next queued trucks, record laboratory moisture %, weigh loads, and disburse DBT payments.",
+      "active": "Active Form Below",
+      "select": "Select Operator Access"
+    },
+    "adminCard": {
+      "title": "For State Admins",
+      "desc": "Multi-state APMC monitoring, weighbridge operations, live congestion heatmaps, and procurement quotas.",
+      "active": "Active Form Below",
+      "select": "Select State Admin Access"
+    },
+    "login": {
+      "phoneOtpTab": "Mobile OTP (SMS)",
+      "emailOtpTab": "Email OTP (Fast)",
+      "passwordTab": "Password Login",
+      "fullName": "Full Name",
+      "enterFullName": "Enter your full name",
+      "mobileNumber": "Mobile Number",
+      "sendOtp": "Send Verification OTP",
+      "sending": "Sending OTP...",
+      "verifyEnter": "Verify OTP & Enter",
+      "verifying": "Verifying...",
+      "resendOtp": "Resend OTP",
+      "resendIn": "Resend in",
+      "officialEmail": "Official Government Email",
+      "password": "Password",
+      "signIn": "Sign In to Workspace",
+      "selectState": "Select State",
+      "village": "Village / Tehsil",
+      "enterVillage": "Enter village name",
+      "demoAccounts": "Demo One-Click Accounts",
+      "demoOtpTip": "Demo OTP is 123456"
+    }
+  },
+  "footer": {
+    "tagline": "India's smart agricultural procurement queue management and real-time scheduling ecosystem for APMC mandis.",
+    "compliance": "Compliant with Ministry of Agriculture & APMC Mandi Framework",
+    "portalsHeader": "Portals",
+    "farmerApp": "Farmer Mobile App",
+    "operatorDesk": "Mandi Desk Terminal",
+    "adminDash": "State Admin Dashboard",
+    "statesHeader": "Supported States",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "openProtocol": "GovTech Open Protocol",
+    "rightsReserved": "All rights reserved."
+  }
+}

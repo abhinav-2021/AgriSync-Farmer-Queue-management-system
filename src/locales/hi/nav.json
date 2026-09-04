@@ -1,0 +1,15 @@
+{
+  "home": "होम",
+  "stateAdmin": "राज्य व्यवस्थापक",
+  "procurementDashboard": "मंडी खरीद डैशबोर्ड",
+  "farmerPortal": "किसान पोर्टल",
+  "mandiDesk": "मंडी डेस्क",
+  "activeServing": "सक्रिय टोकन",
+  "realtimeSync": "रीयल-टाइम सिंक",
+  "connecting": "कनेक्ट हो रहा है",
+  "selectLanguage": "भाषा चुनें",
+  "muteAudio": "ध्वनि बंद करें",
+  "enableAudio": "ध्वनि चालू करें",
+  "resetData": "डेटा रीसेट करें",
+  "signOut": "लॉग आउट"
+}

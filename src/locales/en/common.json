@@ -1,0 +1,42 @@
+{
+  "appTitle": "AgriSync",
+  "tagline": "Smart Mandi & APMC Queue Management System",
+  "loading": "Loading...",
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Syncing",
+    "connected": "Connected"
+  },
+  "stages": {
+    "registered": "Registered",
+    "verified": "Quality Verified",
+    "weighed": "Weighbridge Gross",
+    "paid": "Payment Disbursed",
+    "completed": "Completed"
+  },
+  "stageDescriptions": {
+    "registered": "Gate pass generated. Approach Gate Entry 1 on time.",
+    "verified": "Sample moisture & physical quality checked at Lab.",
+    "weighed": "Gross load weighed on electronic weighbridge.",
+    "paid": "Direct MSP amount credited via DBT Bank transfer."
+  },
+  "buttons": {
+    "bookSlot": "Book Delivery Slot",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search",
+    "refresh": "Refresh",
+    "close": "Close",
+    "save": "Save Changes",
+    "back": "Go Back"
+  },
+  "units": {
+    "minutes": "mins",
+    "vehicles": "vehicles",
+    "quintals": "quintals",
+    "rupees": "₹"
+  }
+}

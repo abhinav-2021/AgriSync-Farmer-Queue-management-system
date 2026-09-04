@@ -1,0 +1,15 @@
+{
+  "home": "Home",
+  "stateAdmin": "State Admin",
+  "procurementDashboard": "Procurement Command Center",
+  "farmerPortal": "Farmer Portal",
+  "mandiDesk": "Mandi Desk",
+  "activeServing": "Active",
+  "realtimeSync": "Real-Time Sync",
+  "connecting": "Connecting",
+  "selectLanguage": "Select Language",
+  "muteAudio": "Mute audio notifications",
+  "enableAudio": "Enable audio notifications",
+  "resetData": "Reset initial queue data",
+  "signOut": "Sign Out"
+}
