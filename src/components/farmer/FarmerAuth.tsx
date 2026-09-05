@@ -11,7 +11,10 @@ import {
   CheckCircle2,
   Clock,
   Send,
-  Sparkles
+  Sparkles,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 export const FarmerAuth: React.FC = () => {
@@ -34,12 +37,14 @@ export const FarmerAuth: React.FC = () => {
   const [phoneOtp, setPhoneOtp] = useState('');
   const [phoneCountdown, setPhoneCountdown] = useState(0);
   const [phoneIsSandbox, setPhoneIsSandbox] = useState(false);
+  const [showPhoneOtp, setShowPhoneOtp] = useState(false);
 
   // Email OTP states
   const [email, setEmail] = useState('');
   const [emailOtpStep, setEmailOtpStep] = useState(false);
   const [emailOtp, setEmailOtp] = useState('');
   const [emailCountdown, setEmailCountdown] = useState(0);
+  const [showEmailOtp, setShowEmailOtp] = useState(false);
 
   // Countdown timer for Phone OTP resend
   useEffect(() => {
@@ -411,19 +416,41 @@ export const FarmerAuth: React.FC = () => {
               )}
 
               <div>
-                <label className="block text-slate-700 font-medium mb-1">
-                  Enter 6-Digit OTP Code
-                </label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  autoFocus
-                  required
-                  placeholder="------"
-                  value={phoneOtp}
-                  onChange={(e) => setPhoneOtp(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-3 py-2.5 text-center tracking-[0.5em] border border-slate-200 rounded-md font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs"
-                />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-slate-700 font-medium flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Enter 6-Digit OTP Code</span>
+                  </label>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    {showPhoneOtp ? 'Visible' : 'Hidden (Protected)'}
+                  </span>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showPhoneOtp ? 'text' : 'password'}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    autoFocus
+                    required
+                    placeholder="••••••"
+                    value={phoneOtp}
+                    onChange={(e) => setPhoneOtp(e.target.value.replace(/\D/g, ''))}
+                    className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] border border-slate-200 rounded-md font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs transition-colors ${
+                      showPhoneOtp ? 'otp-unmasked' : 'otp-masked'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPhoneOtp(!showPhoneOtp)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                    title={showPhoneOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                    aria-label={showPhoneOtp ? 'Hide OTP' : 'Show OTP'}
+                  >
+                    {showPhoneOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center justify-between text-[11px]">
@@ -574,19 +601,41 @@ export const FarmerAuth: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-medium mb-1">
-                  Enter 6-Digit Email OTP
-                </label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  autoFocus
-                  required
-                  placeholder="------"
-                  value={emailOtp}
-                  onChange={(e) => setEmailOtp(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-3 py-2.5 text-center tracking-[0.5em] border border-slate-200 rounded-md font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs"
-                />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-slate-700 font-medium flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Enter 6-Digit Email OTP</span>
+                  </label>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    {showEmailOtp ? 'Visible' : 'Hidden (Protected)'}
+                  </span>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showEmailOtp ? 'text' : 'password'}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    autoFocus
+                    required
+                    placeholder="••••••"
+                    value={emailOtp}
+                    onChange={(e) => setEmailOtp(e.target.value.replace(/\D/g, ''))}
+                    className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] border border-slate-200 rounded-md font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs transition-colors ${
+                      showEmailOtp ? 'otp-unmasked' : 'otp-masked'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEmailOtp(!showEmailOtp)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                    title={showEmailOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                    aria-label={showEmailOtp ? 'Hide OTP' : 'Show OTP'}
+                  >
+                    {showEmailOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
                 <p className="text-[11px] text-slate-500 mt-1">
                   Tip: Enter the 6-digit code sent to your email, or use test OTP <strong>123456</strong>. If your email has a login button, clicking it will also log you in directly!
                 </p>

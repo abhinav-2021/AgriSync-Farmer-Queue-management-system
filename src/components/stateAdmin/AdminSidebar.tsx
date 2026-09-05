@@ -135,33 +135,27 @@ export const AdminSidebar: React.FC = () => {
       {/* Bottom Profile & Switcher Footer */}
       <div className="p-3 border-t border-slate-800 space-y-2">
         
-        {/* Quick Portal Switcher buttons */}
+        {/* Admin Quick Navigation */}
         <div className="bg-slate-800/70 p-2 rounded-lg border border-slate-700/60 text-xs">
           <span className="text-[10px] text-slate-400 font-medium block mb-1.5">
-            Switch Workspace
+            Admin Navigation
           </span>
-          <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-2 gap-1.5">
             <button
               onClick={() => setPortalView('landing')}
-              className="py-1 px-1.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition-colors"
-              title="Landing Page"
+              className="py-1 px-2 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition-colors"
+              title="Public Home"
             >
-              <Home className="w-2.5 h-2.5 opacity-70" />
+              <Home className="w-3 h-3 opacity-70" />
               <span>Home</span>
             </button>
             <button
               onClick={() => setPortalView('mandi-desk')}
-              className="py-1 px-1.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition-colors"
+              className="py-1 px-2 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition-colors"
+              title="APMC Mandi Clearance Desk"
             >
-              <span>Mandi</span>
-              <ExternalLink className="w-2 h-2 opacity-50" />
-            </button>
-            <button
-              onClick={() => setPortalView('farmer')}
-              className="py-1 px-1.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition-colors"
-            >
-              <span>Farmer</span>
-              <ExternalLink className="w-2 h-2 opacity-50" />
+              <span>Mandi Desk</span>
+              <ExternalLink className="w-2.5 h-2.5 opacity-60" />
             </button>
           </div>
         </div>

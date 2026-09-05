@@ -90,6 +90,10 @@ export interface MandiCenter {
   todayQuintals: number;
   dailyCapacity: number;
   headOperator: string;
+  officialEmail?: string;
+  accessPassword?: string;
+  contactPhone?: string;
+  createdAt?: string;
 }
 
 export interface MandiOption {

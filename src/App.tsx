@@ -8,9 +8,11 @@ import { ProcurementDashboard } from './components/admin/ProcurementDashboard';
 import { FarmerPortal } from './components/farmer/FarmerPortal';
 import { ToastContainer } from './components/common/ToastContainer';
 
+import { AccessDenied } from './components/common/AccessDenied';
+
 const AppContent: React.FC = () => {
   const { portalView, setPortalView, loginFarmer, triggerToast } = useQueue();
-  const { profile } = useAuth();
+  const { profile, userRole, isAuthenticated } = useAuth();
 
   // Listen for active Supabase incoming auth redirects (Magic link callback)
   useEffect(() => {
@@ -54,6 +56,7 @@ const AppContent: React.FC = () => {
     }
   }, [profile]);
 
+  // 1. Landing Page (Public)
   if (portalView === 'landing') {
     return (
       <>
@@ -63,7 +66,17 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // 2. State Admin Portal (Requires Admin Credentials)
   if (portalView === 'state-admin') {
+    if (!isAuthenticated || userRole !== 'admin') {
+      return (
+        <>
+          <AccessDenied requiredRole="admin" />
+          <ToastContainer />
+        </>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
         <StateAdminPortal />
@@ -72,21 +85,35 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // 3. Mandi Command Center (Requires Operator or Admin Credentials)
+  if (portalView === 'mandi-desk') {
+    if (!isAuthenticated || (userRole !== 'operator' && userRole !== 'admin')) {
+      return (
+        <>
+          <AccessDenied requiredRole="operator" />
+          <ToastContainer />
+        </>
+      );
+    }
+
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+        <Header />
+        <main className="flex-1 w-full pb-12">
+          <ProcurementDashboard />
+        </main>
+        <ToastContainer />
+      </div>
+    );
+  }
+
+  // 4. Farmer Portal (Authenticated or Farmer Registration Flow)
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      {/* Top Navigation */}
       <Header />
-
-      {/* Main Workspace */}
       <main className="flex-1 w-full pb-12">
-        {portalView === 'farmer' ? (
-          <FarmerPortal />
-        ) : (
-          <ProcurementDashboard />
-        )}
+        <FarmerPortal />
       </main>
-
-      {/* Toast Stack */}
       <ToastContainer />
     </div>
   );

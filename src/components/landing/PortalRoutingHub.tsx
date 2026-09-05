@@ -14,7 +14,10 @@ import {
   CheckCircle2,
   Clock,
   Send,
-  Sparkles
+  Sparkles,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 type SelectedRole = 'farmer' | 'operator' | 'admin' | null;
@@ -50,12 +53,14 @@ export const PortalRoutingHub: React.FC = () => {
   const [farmerPhoneOtp, setFarmerPhoneOtp] = useState('');
   const [farmerPhoneCountdown, setFarmerPhoneCountdown] = useState(0);
   const [farmerPhoneIsSandbox, setFarmerPhoneIsSandbox] = useState(false);
+  const [showFarmerPhoneOtp, setShowFarmerPhoneOtp] = useState(false);
 
   // Farmer Email OTP
   const [farmerEmail, setFarmerEmail] = useState('');
   const [farmerEmailOtpStep, setFarmerEmailOtpStep] = useState(false);
   const [farmerEmailOtp, setFarmerEmailOtp] = useState('');
   const [farmerEmailCountdown, setFarmerEmailCountdown] = useState(0);
+  const [showFarmerEmailOtp, setShowFarmerEmailOtp] = useState(false);
 
   // -------------------------------------------------------------
   // Mandi Operator Form states
@@ -66,6 +71,8 @@ export const PortalRoutingHub: React.FC = () => {
   const [mandiOtp, setMandiOtp] = useState('');
   const [mandiPassword, setMandiPassword] = useState('Pass@1234');
   const [mandiCountdown, setMandiCountdown] = useState(0);
+  const [showMandiOtp, setShowMandiOtp] = useState(false);
+  const [showMandiPassword, setShowMandiPassword] = useState(false);
 
   // -------------------------------------------------------------
   // State Admin Form states
@@ -76,6 +83,8 @@ export const PortalRoutingHub: React.FC = () => {
   const [adminOtp, setAdminOtp] = useState('');
   const [adminPassword, setAdminPassword] = useState('Pass@1234');
   const [adminCountdown, setAdminCountdown] = useState(0);
+  const [showAdminOtp, setShowAdminOtp] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
 
   // Countdown timers
   useEffect(() => {
@@ -101,6 +110,23 @@ export const PortalRoutingHub: React.FC = () => {
     if (adminCountdown > 0) t = setTimeout(() => setAdminCountdown((c) => c - 1), 1000);
     return () => clearTimeout(t);
   }, [adminCountdown]);
+
+  useEffect(() => {
+    const handleHashCheck = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (hash === 'admin' || hash === 'state-admin') {
+        setSelectedRole('admin');
+      } else if (hash === 'operator' || hash === 'mandi' || hash === 'mandi-desk') {
+        setSelectedRole('operator');
+      } else if (hash === 'farmer') {
+        setSelectedRole('farmer');
+      }
+    };
+
+    handleHashCheck();
+    window.addEventListener('hashchange', handleHashCheck);
+    return () => window.removeEventListener('hashchange', handleHashCheck);
+  }, []);
 
   const handleRoleChange = (role: SelectedRole) => {
     setSelectedRole(role);
@@ -725,19 +751,41 @@ export const PortalRoutingHub: React.FC = () => {
                     )}
 
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Enter 6-Digit Mobile OTP
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        autoFocus
-                        required
-                        placeholder="------"
-                        value={farmerPhoneOtp}
-                        onChange={(e) => setFarmerPhoneOtp(e.target.value.replace(/\D/g, ''))}
-                        className="w-full px-3 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="font-semibold text-slate-700 flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Enter 6-Digit Mobile OTP</span>
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-medium">
+                          {showFarmerPhoneOtp ? 'Visible' : 'Hidden (Protected)'}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showFarmerPhoneOtp ? 'text' : 'password'}
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          autoFocus
+                          required
+                          placeholder="••••••"
+                          value={farmerPhoneOtp}
+                          onChange={(e) => setFarmerPhoneOtp(e.target.value.replace(/\D/g, ''))}
+                          className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs transition-colors ${
+                            showFarmerPhoneOtp ? 'otp-unmasked' : 'otp-masked'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowFarmerPhoneOtp(!showFarmerPhoneOtp)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                          title={showFarmerPhoneOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                          aria-label={showFarmerPhoneOtp ? 'Hide OTP' : 'Show OTP'}
+                        >
+                          {showFarmerPhoneOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between text-[11px]">
@@ -886,19 +934,41 @@ export const PortalRoutingHub: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Enter 6-Digit Email OTP
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        autoFocus
-                        required
-                        placeholder="------"
-                        value={farmerEmailOtp}
-                        onChange={(e) => setFarmerEmailOtp(e.target.value.replace(/\D/g, ''))}
-                        className="w-full px-3 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="font-semibold text-slate-700 flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Enter 6-Digit Email OTP</span>
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-medium">
+                          {showFarmerEmailOtp ? 'Visible' : 'Hidden (Protected)'}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showFarmerEmailOtp ? 'text' : 'password'}
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          autoFocus
+                          required
+                          placeholder="••••••"
+                          value={farmerEmailOtp}
+                          onChange={(e) => setFarmerEmailOtp(e.target.value.replace(/\D/g, ''))}
+                          className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-emerald-600 shadow-2xs transition-colors ${
+                            showFarmerEmailOtp ? 'otp-unmasked' : 'otp-masked'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowFarmerEmailOtp(!showFarmerEmailOtp)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                          title={showFarmerEmailOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                          aria-label={showFarmerEmailOtp ? 'Hide OTP' : 'Show OTP'}
+                        >
+                          {showFarmerEmailOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                       <p className="text-[11px] text-slate-500 mt-1">
                         Tip: You can enter the 6-digit OTP, click <strong>Auto-fill 123456</strong>, or click the login link in your email to sign in directly!
                       </p>
@@ -1049,19 +1119,41 @@ export const PortalRoutingHub: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Enter 6-Digit Email OTP
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        autoFocus
-                        required
-                        placeholder="------"
-                        value={mandiOtp}
-                        onChange={(e) => setMandiOtp(e.target.value.replace(/\D/g, ''))}
-                        className="w-full px-3 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-purple-600"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="font-semibold text-slate-700 flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Enter 6-Digit Email OTP</span>
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-medium">
+                          {showMandiOtp ? 'Visible' : 'Hidden (Protected)'}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showMandiOtp ? 'text' : 'password'}
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          autoFocus
+                          required
+                          placeholder="••••••"
+                          value={mandiOtp}
+                          onChange={(e) => setMandiOtp(e.target.value.replace(/\D/g, ''))}
+                          className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-purple-600 shadow-2xs transition-colors ${
+                            showMandiOtp ? 'otp-unmasked' : 'otp-masked'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowMandiOtp(!showMandiOtp)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                          title={showMandiOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                          aria-label={showMandiOtp ? 'Hide OTP' : 'Show OTP'}
+                        >
+                          {showMandiOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                       <p className="text-[11px] text-slate-500 mt-1">
                         Tip: Enter the code from email, click <strong>Auto-fill 123456</strong>, or click the email link directly.
                       </p>
@@ -1097,13 +1189,23 @@ export const PortalRoutingHub: React.FC = () => {
                     <label className="block font-semibold text-slate-700 mb-1">
                       Security Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      value={mandiPassword}
-                      onChange={(e) => setMandiPassword(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-purple-600"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showMandiPassword ? 'text' : 'password'}
+                        required
+                        value={mandiPassword}
+                        onChange={(e) => setMandiPassword(e.target.value)}
+                        className="w-full pl-3 pr-10 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-purple-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowMandiPassword(!showMandiPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded focus:outline-none"
+                        title={showMandiPassword ? 'Hide Password' : 'Show Password'}
+                      >
+                        {showMandiPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -1224,19 +1326,41 @@ export const PortalRoutingHub: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
-                        Enter 6-Digit Email OTP
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        autoFocus
-                        required
-                        placeholder="------"
-                        value={adminOtp}
-                        onChange={(e) => setAdminOtp(e.target.value.replace(/\D/g, ''))}
-                        className="w-full px-3 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-slate-900"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="font-semibold text-slate-700 flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Enter 6-Digit Email OTP</span>
+                        </label>
+                        <span className="text-[11px] text-slate-400 font-medium">
+                          {showAdminOtp ? 'Visible' : 'Hidden (Protected)'}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showAdminOtp ? 'text' : 'password'}
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          autoFocus
+                          required
+                          placeholder="••••••"
+                          value={adminOtp}
+                          onChange={(e) => setAdminOtp(e.target.value.replace(/\D/g, ''))}
+                          className={`w-full pl-10 pr-10 py-2.5 text-center tracking-[0.5em] bg-white border border-slate-200 rounded-lg font-mono text-lg font-bold text-slate-900 focus:outline-none focus:border-slate-900 shadow-2xs transition-colors ${
+                            showAdminOtp ? 'otp-unmasked' : 'otp-masked'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowAdminOtp(!showAdminOtp)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5 rounded-md hover:bg-slate-100 transition-colors focus:outline-none"
+                          title={showAdminOtp ? 'Hide OTP (dots)' : 'Show OTP'}
+                          aria-label={showAdminOtp ? 'Hide OTP' : 'Show OTP'}
+                        >
+                          {showAdminOtp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                       <p className="text-[11px] text-slate-500 mt-1">
                         Tip: Enter the code from email, click <strong>Auto-fill 123456</strong>, or click the email link directly.
                       </p>
@@ -1272,13 +1396,23 @@ export const PortalRoutingHub: React.FC = () => {
                     <label className="block font-semibold text-slate-700 mb-1">
                       Department Security Key
                     </label>
-                    <input
-                      type="password"
-                      required
-                      value={adminPassword}
-                      onChange={(e) => setAdminPassword(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-slate-900"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showAdminPassword ? 'text' : 'password'}
+                        required
+                        value={adminPassword}
+                        onChange={(e) => setAdminPassword(e.target.value)}
+                        className="w-full pl-3 pr-10 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-slate-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowAdminPassword(!showAdminPassword)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded focus:outline-none"
+                        title={showAdminPassword ? 'Hide Password' : 'Show Password'}
+                      >
+                        {showAdminPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
 
                   <button

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQueue } from '../../context/QueueContext';
+import { useAuth } from '../../context/AuthContext';
 import { QueueMetrics } from './QueueMetrics';
 import { CallNextControl } from './CallNextControl';
 import { BookingsTable } from './BookingsTable';
@@ -8,6 +9,7 @@ import { Download, Plus } from 'lucide-react';
 
 export const ProcurementDashboard: React.FC = () => {
   const { bookings } = useQueue();
+  const { profile } = useAuth();
   const [isWalkInOpen, setIsWalkInOpen] = useState(false);
 
   const todayDateFormatted = new Intl.DateTimeFormat('en-IN', {
@@ -42,7 +44,11 @@ export const ProcurementDashboard: React.FC = () => {
             Procurement Command Center
           </h1>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-slate-500 font-medium">
-            <span>APMC Mandi Yard • Karnal, Haryana</span>
+            <span className="font-semibold text-slate-700">
+              {profile?.mandi_name
+                ? `${profile.mandi_name} • ${profile.state || 'State APMC'}`
+                : 'APMC Mandi Yard • Karnal, Haryana'}
+            </span>
             <span>•</span>
             <span>{todayDateFormatted}</span>
             <span>•</span>

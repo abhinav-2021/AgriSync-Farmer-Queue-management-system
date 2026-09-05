@@ -15,9 +15,11 @@ export const Header: React.FC = () => {
     setSoundEnabled,
     resetToMockData,
     isRealtimeConnected,
-    activeCalledToken
+    activeCalledToken,
+    currentFarmer,
+    logoutFarmer
   } = useQueue();
-  const { profile, isAuthenticated, signOut } = useAuth();
+  const { profile, isAuthenticated, userRole, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">
@@ -34,7 +36,7 @@ export const Header: React.FC = () => {
               <AgriSyncLogo variant="navbar" />
             </button>
 
-            {/* Main Tabs */}
+            {/* Role-Specific Main Navigation */}
             <nav className="flex items-center gap-1.5 border-l border-slate-200 pl-4 sm:pl-5">
               <button
                 onClick={() => setPortalView('landing')}
@@ -45,41 +47,63 @@ export const Header: React.FC = () => {
                 <span className="hidden sm:inline">{t('home', 'Home')}</span>
               </button>
 
-              <button
-                id="view-state-btn"
-                onClick={() => setPortalView('state-admin')}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  portalView === 'state-admin'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                {t('stateAdmin', 'State Admin')}
-              </button>
+              {/* 1. Farmer Portal Active Workspace Badge (Only for Farmers) */}
+              {(currentFarmer || userRole === 'farmer') && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                  <span>🌾 {t('farmerPortal', 'Farmer Portal')}</span>
+                </div>
+              )}
 
-              <button
-                id="view-admin-btn"
-                onClick={() => setPortalView('mandi-desk')}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  portalView === 'mandi-desk'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                {t('procurementDashboard', 'Procurement Command Center')}
-              </button>
+              {/* 2. Mandi Desk Active Workspace Badge (Only for Operators) */}
+              {userRole === 'operator' && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
+                  <span>🏢 {profile?.mandi_name ? `${profile.mandi_name}` : t('procurementDashboard', 'Mandi Command Desk')}</span>
+                </div>
+              )}
 
-              <button
-                id="view-farmer-btn"
-                onClick={() => setPortalView('farmer')}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  portalView === 'farmer'
-                    ? 'bg-slate-100 text-slate-900 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-              >
-                {t('farmerPortal', 'Farmer Portal')}
-              </button>
+              {/* 3. State Admin Active Workspace (Only for Admins) */}
+              {userRole === 'admin' && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setPortalView('state-admin')}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      portalView === 'state-admin'
+                        ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    }`}
+                  >
+                    🏛️ {t('stateAdmin', 'State Admin')}
+                  </button>
+                  <button
+                    onClick={() => setPortalView('mandi-desk')}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      portalView === 'mandi-desk'
+                        ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    }`}
+                  >
+                    🏢 {t('procurementDashboard', 'Mandi Command Desk')}
+                  </button>
+                </div>
+              )}
+
+              {/* 4. Guest / Unauthenticated: Show link to access authorized portals */}
+              {!currentFarmer && !userRole && (
+                <button
+                  onClick={() => {
+                    setPortalView('landing');
+                    setTimeout(() => {
+                      const el = document.getElementById('portals');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="px-3 py-1.5 rounded-md text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors flex items-center gap-1"
+                >
+                  <span>Sign In to Portals</span>
+                </button>
+              )}
             </nav>
           </div>
 
@@ -129,26 +153,32 @@ export const Header: React.FC = () => {
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
 
-            {/* Authenticated User Chip & Sign Out */}
-            {isAuthenticated && (
+            {/* Authenticated User or Farmer Chip & Sign Out */}
+            {(isAuthenticated || currentFarmer) && (
               <div className="flex items-center gap-2 border-l border-slate-200 pl-3">
                 <div className="hidden sm:block text-right">
-                  <span className="text-xs font-semibold text-slate-800 block leading-tight truncate max-w-[120px]">
-                    {profile?.full_name || 'User'}
+                  <span className="text-xs font-semibold text-slate-800 block leading-tight truncate max-w-[150px]">
+                    {currentFarmer?.name || profile?.full_name || 'User'}
                   </span>
-                  <span className="text-[10px] text-slate-400 block capitalize">
-                    {profile?.role || 'Member'}
+                  <span className="text-[10px] text-slate-400 block capitalize truncate max-w-[150px]">
+                    {currentFarmer
+                      ? 'Farmer'
+                      : profile?.mandi_name
+                      ? `Operator • ${profile.mandi_name}`
+                      : (profile?.role || userRole || 'Member')}
                   </span>
                 </div>
                 <button
                   onClick={async () => {
+                    logoutFarmer();
                     await signOut();
                     setPortalView('landing');
                   }}
                   title={t('signOut', 'Sign Out')}
-                  className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1"
                 >
                   <LogOut className="w-3.5 h-3.5" />
+                  <span className="text-[11px] font-medium hidden md:inline">Sign Out</span>
                 </button>
               </div>
             )}

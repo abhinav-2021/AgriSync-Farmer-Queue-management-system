@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQueue } from '../../context/QueueContext';
 import { AgriSyncLogo } from '../common/AgriSyncLogo';
 import type { StateFilter } from '../../types';
+import { useAuth } from '../../context/AuthContext';
 import {
   Menu,
   Search,
@@ -10,7 +11,8 @@ import {
   Home,
   Globe,
   ChevronDown,
-  MapPin
+  MapPin,
+  LogOut
 } from 'lucide-react';
 
 export const AdminTopHeader: React.FC = () => {
@@ -25,6 +27,7 @@ export const AdminTopHeader: React.FC = () => {
     selectedStateFilter,
     setSelectedStateFilter
   } = useQueue();
+  const { profile, signOut } = useAuth();
 
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
@@ -136,16 +139,6 @@ export const AdminTopHeader: React.FC = () => {
             >
               Mandi Yard Desk
             </button>
-            <button
-              onClick={() => setPortalView('farmer')}
-              className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                portalView === 'farmer'
-                  ? 'bg-white text-slate-900 font-semibold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Farmer View
-            </button>
           </div>
 
           <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500">
@@ -198,17 +191,27 @@ export const AdminTopHeader: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2.5 border-l border-slate-200 pl-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-semibold text-xs shadow-xs">
-              SS
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-semibold text-xs shadow-xs">
+              {(profile?.full_name || 'Admin').substring(0, 2).toUpperCase()}
             </div>
             <div className="hidden sm:block text-left">
-              <span className="text-xs font-semibold text-slate-900 block leading-tight">
-                S. Sharma
+              <span className="text-xs font-semibold text-slate-900 block leading-tight truncate max-w-[120px]">
+                {profile?.full_name || 'Directorate Admin'}
               </span>
               <span className="text-[10px] text-slate-400 block">
-                State Director
+                Level 1 Admin
               </span>
             </div>
+            <button
+              onClick={async () => {
+                await signOut();
+                setPortalView('landing');
+              }}
+              title="Sign Out"
+              className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors ml-1"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
 
         </div>

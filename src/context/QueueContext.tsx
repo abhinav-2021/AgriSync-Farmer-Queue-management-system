@@ -38,6 +38,10 @@ interface QueueContextType {
   setGlobalSearchQuery: (query: string) => void;
   setSelectedStateFilter: (filter: StateFilter) => void;
   
+  // Mandi Operations
+  addMandi: (mandiData: Omit<MandiCenter, 'id' | 'status' | 'waitTimeMinutes' | 'activeVehicles' | 'todayQuintals'> & { password?: string; email?: string }) => MandiCenter;
+  removeMandi: (mandiId: string) => void;
+
   // Queue Operations
   bookSlot: (bookingData: Omit<Booking, 'id' | 'created_at' | 'updated_at' | 'token_number' | 'status' | 'stage_timestamps'>) => Promise<Booking>;
   callNextToken: (customToken?: string, counter?: string) => Promise<Booking | null>;
@@ -54,6 +58,22 @@ const STORAGE_KEY_BOOKINGS = 'agrisync_bookings_v3';
 const STORAGE_KEY_ACTIVE_TOKEN = 'agrisync_active_token_v3';
 const STORAGE_KEY_FARMER = 'agrisync_current_farmer_v3';
 const STORAGE_KEY_VIEW = 'agrisync_portal_view_v3';
+const STORAGE_KEY_MANDIS = 'agrisync_mandis_v2';
+
+// Helper to ensure every mandi center has valid official APMC credentials
+const initializeMandisWithCredentials = (items: MandiCenter[]): MandiCenter[] => {
+  return items.map((m) => {
+    const slug = (m.district || m.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanDistrict = (m.district || m.name).replace(/[^a-zA-Z]/g, '');
+    return {
+      ...m,
+      officialEmail: m.officialEmail || `mandi.${slug}@agrisync.gov.in`,
+      accessPassword: m.accessPassword || `${cleanDistrict || 'Mandi'}@2026`,
+      contactPhone: m.contactPhone || '9876543210',
+      createdAt: m.createdAt || '2026-01-15T08:00:00.000Z'
+    };
+  });
+};
 
 // Normalizes status strings from either 'REGISTERED' or 'registered'
 const normalizeStage = (status: string): QueueStage => {
@@ -112,7 +132,24 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   });
 
-  const [mandis] = useState<MandiCenter[]>(MOCK_MANDIS);
+  const [mandis, setMandis] = useState<MandiCenter[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_MANDIS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return initializeMandisWithCredentials(parsed);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load stored mandis', e);
+    }
+    const initial = initializeMandisWithCredentials(MOCK_MANDIS);
+    try {
+      localStorage.setItem(STORAGE_KEY_MANDIS, JSON.stringify(initial));
+    } catch {}
+    return initial;
+  });
 
   const [currentFarmer, setCurrentFarmer] = useState<Farmer | null>(() => {
     try {
@@ -152,17 +189,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLanguageState(lang);
     i18n.changeLanguage(lang);
   }, []);
-  const [portalView, setPortalView] = useState<PortalView>(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const portalParam = urlParams.get('portal') as PortalView;
-      if (portalParam && ['landing', 'state-admin', 'mandi-desk', 'farmer'].includes(portalParam)) {
-        return portalParam;
-      }
-    } catch {}
-    // Default to 'landing' page so it always loads first
-    return 'landing';
-  });
+  // Always default to landing page to prevent unauthenticated portal bypass
+  const [portalView, setPortalView] = useState<PortalView>('landing');
 
   const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useState<boolean>(false);
@@ -439,12 +467,98 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const logoutFarmer = () => {
     setCurrentFarmer(null);
+    setPortalView('landing');
     try {
       localStorage.removeItem(STORAGE_KEY_FARMER);
+      sessionStorage.removeItem(STORAGE_KEY_VIEW);
     } catch (e) {
       console.error(e);
     }
   };
+
+  // Add a new APMC Mandi with auto-generated credentials
+  const addMandi = useCallback(
+    (
+      mandiData: Omit<
+        MandiCenter,
+        'id' | 'status' | 'waitTimeMinutes' | 'activeVehicles' | 'todayQuintals'
+      > & { password?: string; email?: string }
+    ): MandiCenter => {
+      const cleanDistrict = mandiData.district.trim();
+      const slugDistrict = cleanDistrict.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const uniqueSuffix = Date.now().toString().slice(-4);
+      const generatedEmail =
+        mandiData.officialEmail?.trim() ||
+        mandiData.email?.trim() ||
+        `mandi.${slugDistrict || 'centre'}.${uniqueSuffix}@agrisync.gov.in`;
+
+      const generatedPassword =
+        mandiData.accessPassword?.trim() ||
+        mandiData.password?.trim() ||
+        `Mandi#${cleanDistrict.replace(/[^a-zA-Z]/g, '') || 'India'}${uniqueSuffix}`;
+
+      const newMandi: MandiCenter = {
+        id: `mandi-${Date.now()}`,
+        name: mandiData.name.trim(),
+        district: cleanDistrict,
+        state: mandiData.state || 'Haryana',
+        status: 'optimal',
+        waitTimeMinutes: 15,
+        activeVehicles: 0,
+        activeCounters: Number(mandiData.activeCounters) || 4,
+        todayQuintals: 0,
+        dailyCapacity: Number(mandiData.dailyCapacity) || 20000,
+        headOperator: mandiData.headOperator?.trim() || 'Assigned Officer',
+        officialEmail: generatedEmail,
+        accessPassword: generatedPassword,
+        contactPhone: mandiData.contactPhone || '9876543210',
+        createdAt: new Date().toISOString()
+      };
+
+      setMandis((prev) => {
+        const updated = [newMandi, ...prev];
+        try {
+          localStorage.setItem(STORAGE_KEY_MANDIS, JSON.stringify(updated));
+        } catch (e) {
+          console.error('Failed to save mandis', e);
+        }
+        return updated;
+      });
+
+      triggerToast({
+        title: 'Mandi Centre Registered',
+        message: `${newMandi.name} added. Operator login generated: ${newMandi.officialEmail}`,
+        type: 'success'
+      });
+
+      return newMandi;
+    },
+    [triggerToast]
+  );
+
+  // Decommission and remove a Mandi
+  const removeMandi = useCallback(
+    (mandiId: string) => {
+      setMandis((prev) => {
+        const target = prev.find((m) => m.id === mandiId);
+        const updated = prev.filter((m) => m.id !== mandiId);
+        try {
+          localStorage.setItem(STORAGE_KEY_MANDIS, JSON.stringify(updated));
+        } catch (e) {
+          console.error('Failed to save mandis after removal', e);
+        }
+        if (target) {
+          triggerToast({
+            title: 'Mandi Decommissioned',
+            message: `${target.name} (${target.district}) was removed and operator access revoked.`,
+            type: 'urgent'
+          });
+        }
+        return updated;
+      });
+    },
+    [triggerToast]
+  );
 
   // Step 2 & 3: Book Slot Mutation
   const bookSlot = async (bookingData: Omit<Booking, 'id' | 'created_at' | 'updated_at' | 'token_number' | 'status' | 'stage_timestamps'>): Promise<Booking> => {
@@ -719,6 +833,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setGlobalSearchQuery,
         selectedStateFilter,
         setSelectedStateFilter,
+        addMandi,
+        removeMandi,
         bookSlot,
         callNextToken,
         updateBookingStage,
